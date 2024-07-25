@@ -27,7 +27,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 Type = "Reproductive",
                 Status = DoneStatus.Undone.ToString(),
                 Executor = HaveSex,
-                Date = RandomDay()
+                Date = RandomDay(husband.RelDate)
             });
         }
 
@@ -71,18 +71,9 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
         {
             Random generator = new();
 
-            DoingAct.Status = DoneStatus.Done.ToString();
+            UndoneActs.Remove(ActManager.DoingAct);
+            ActManager.DoingAct.Status = DoneStatus.Done.ToString();
 
-            AddAct(new Act
-            {
-                Id = Guid.NewGuid(),
-                Name = "Sex",
-                Description = "Have sex to potentially become pregnant",
-                Type = "Reproductive",
-                Status = DoneStatus.Undone.ToString(),
-                Executor = HaveSex,
-                Date = RandomDay(dateTime)
-            });
 
             IsPregnant = generator.Next(0, 2) == 1;
             if (IsPregnant)
@@ -101,6 +92,18 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 OrderPregnancy++;
             }
 
+            AddAct(new Act
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sex",
+                Description = "Have sex to potentially become pregnant",
+                Type = "Reproductive",
+                Status = DoneStatus.Undone.ToString(),
+                Executor = HaveSex,
+                Date = RandomDay(dateTime)
+            });
+
+            Acts.Add(ActManager.DoingAct);
             LastLiveTime = dateTime;
         }
 
@@ -108,6 +111,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
         public void GivingBirth(DateTime dateTime)
         {
             Random generator = new();
+
             Human baby = new Human
             {
                 BirthDate = dateTime,
@@ -116,13 +120,15 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 Mom = Spouse,
                 EyeColor = generator.Next(0, 2) == 0 ? Husband.EyeColor : Spouse.EyeColor,
                 SkinColor = generator.Next(0, 2) == 0 ? Husband.SkinColor : Spouse.SkinColor,
-                HireColor = generator.Next(0, 2) == 0 ? Husband.HireColor : Spouse.HireColor
+                HireColor = generator.Next(0, 2) == 0 ? Husband.HireColor : Spouse.HireColor,
             };
 
-            Act birthAct = UndoneActs.First(a => a.Name == "GivingBirth" && a.Status == DoneStatus.Undone.ToString() && a.Date == dateTime);
-            birthAct.Status = DoneStatus.Done.ToString();
+            UndoneActs.Remove(ActManager.DoingAct);
+            ActManager.DoingAct.Status = DoneStatus.Done.ToString();
+            Acts.Add(ActManager.DoingAct);
 
             ProducedBabies.Add(baby);
+            HumanManager.AddHuman(baby);
             LastLiveTime = dateTime;
         }
 
@@ -143,6 +149,8 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
             return start.AddDays(generator.Next(range));
         }
 
+        
+
         private void AddAct(Act act)
         {
 
@@ -158,6 +166,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 {
                     UndoneActs.Add(act);
                 }
+                ActManager.AddAct(act);
             }
             else
             {

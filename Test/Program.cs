@@ -14,7 +14,8 @@ namespace Test
                 Name = "adam",
                 SkinColor = "white",
                 HireColor = "black",
-                EyeColor = "brown"
+                EyeColor = "brown",
+                BirthDate = new DateTime(1, 1, 1)
 
             };
             Human Hava = new()
@@ -23,12 +24,14 @@ namespace Test
                 Name = "hava",
                 SkinColor = "white",
                 HireColor = "yellow",
-                EyeColor = "blue"
+                EyeColor = "blue",
+                BirthDate = new DateTime(1, 1, 1)
             };
 
-            Couple Couple = new Couple(Adam, Hava);
+            HumanManager.AddHuman(Adam);
+            HumanManager.AddHuman(Hava);
+
             HumanSimulationCore humanSimulation = new HumanSimulationCore();
-            humanSimulation.Couples.Add(Couple);
             bool exit = false;
             while (!exit)
             {
@@ -37,6 +40,7 @@ namespace Test
                 int yy = Convert.ToInt32(Console.ReadLine());
                 int mm = Convert.ToInt32(Console.ReadLine());
                 int dd = Convert.ToInt32(Console.ReadLine());
+                
                 humanSimulation = humanSimulation.GoToDate(new DateTime(yy, mm, dd));
 
                 Console.ReadKey();

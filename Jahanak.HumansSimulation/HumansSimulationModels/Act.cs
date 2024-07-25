@@ -9,6 +9,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
     public class Act
     {
         public Guid Id { get; set; }
+        public Guid ExecutorId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
@@ -22,7 +23,9 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
         Done,
         Undone,
         Doing,
-        givenUp,
+        GivenUp,
+        Canceled,
+        Delayed,
         MissedOpportunity
     }
 }
