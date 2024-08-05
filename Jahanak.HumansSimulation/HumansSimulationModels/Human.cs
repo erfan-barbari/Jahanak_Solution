@@ -8,22 +8,24 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
 {
     public class Human
     {
-        public Human()
+        public Human(string name, DateTime birthDate)
         {
             Id = Guid.NewGuid();
             Acts = [];
             UndoneActs = [];
             DoingAct = new();
+            Name = name;
+            BirthDate = birthDate;
             AddAct(new Act
             {
                 Id = Guid.NewGuid(),
                 ExecutorId = this.Id,
                 Name = "FindRel",
-                Description = "FindRel",
+                Description = "FindRel for :" + Name,
                 Type = "FindRel",
                 Status = DoneStatus.Undone.ToString(),
                 Executor = FindRel,
-                Date = BirthDate.AddYears(15)
+                Date = RandomDay(BirthDate.Date.AddYears(15))
             });
         }
         public Guid Id { get; set; }
@@ -60,6 +62,8 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 love.RelDate = RelDate = dateTime;
                 CoupleManager.AddCouple(new Couple(Gender == "male" ? this : love, Gender == "female" ? this : love));
                 ActManager.DoingAct.Status = DoneStatus.Done.ToString();
+                DoingAct = ActManager.DoingAct;
+                ActManager.DoingAct.Description = Name + "+" + love.Name;
                 CancelFindRelAct(love);
             }
             else

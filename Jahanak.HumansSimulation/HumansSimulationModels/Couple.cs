@@ -23,7 +23,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
             {
                 Id = Guid.NewGuid(),
                 Name = "Sex",
-                Description = "Have sex to potentially become pregnant",
+                Description = "Have sex to potentially become pregnant" + " --> " + husband.Name + " + " + spouse.Name,
                 Type = "Reproductive",
                 Status = DoneStatus.Undone.ToString(),
                 Executor = HaveSex,
@@ -96,7 +96,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
             {
                 Id = Guid.NewGuid(),
                 Name = "Sex",
-                Description = "Have sex to potentially become pregnant",
+                Description = "Have sex to potentially become pregnant" + " --> " + Husband.Name + " + " + Spouse.Name,
                 Type = "Reproductive",
                 Status = DoneStatus.Undone.ToString(),
                 Executor = HaveSex,
@@ -112,7 +112,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
         {
             Random generator = new();
 
-            Human baby = new Human
+            Human baby = new Human(GenerateRandomString(),dateTime)
             {
                 BirthDate = dateTime,
                 Gender = generator.Next(0, 2) == 0 ? "male" : "female",
@@ -120,16 +120,36 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
                 Mom = Spouse,
                 EyeColor = generator.Next(0, 2) == 0 ? Husband.EyeColor : Spouse.EyeColor,
                 SkinColor = generator.Next(0, 2) == 0 ? Husband.SkinColor : Spouse.SkinColor,
-                HireColor = generator.Next(0, 2) == 0 ? Husband.HireColor : Spouse.HireColor,
+                HireColor = generator.Next(0, 2) == 0 ? Husband.HireColor : Spouse.HireColor
             };
 
             UndoneActs.Remove(ActManager.DoingAct);
             ActManager.DoingAct.Status = DoneStatus.Done.ToString();
+            ActManager.DoingAct.Description = baby.Dad.Name + "+" + baby.Mom.Name + "=" + baby.Name + "/" + baby.Gender;
             Acts.Add(ActManager.DoingAct);
 
             ProducedBabies.Add(baby);
             HumanManager.AddHuman(baby);
             LastLiveTime = dateTime;
+        }
+
+        string GenerateRandomString()
+        {
+            // حروف الفبای انگلیسی
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            Random random = new Random();
+
+            // طول تصادفی بین 5 تا 20
+            int length = random.Next(5, 21);
+
+            // ایجاد رشته تصادفی
+            char[] stringChars = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(stringChars);
         }
 
 
@@ -149,7 +169,7 @@ namespace Jahanak.HumansSimulation.HumansSimulationModels
             return start.AddDays(generator.Next(range));
         }
 
-        
+
 
         private void AddAct(Act act)
         {

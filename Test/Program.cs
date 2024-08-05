@@ -8,24 +8,29 @@ namespace Test
 
         static void Main(string[] args)
         {
-            Human Adam = new()
+            string relativePath = "report.txt"; // آدرس نسبی فایل
+            string currentDirectory = Directory.GetCurrentDirectory(); // دایرکتوری فعلی
+            string absolutePath = Path.Combine(currentDirectory, relativePath); // ساخت آدرس مطلق
+
+            if (File.Exists(absolutePath))
+            {
+                File.WriteAllText(absolutePath, "");
+            }
+
+            Human Adam = new("adam", new DateTime(1, 1, 1))
             {
                 Gender = "male",
-                Name = "adam",
                 SkinColor = "white",
                 HireColor = "black",
-                EyeColor = "brown",
-                BirthDate = new DateTime(1, 1, 1)
+                EyeColor = "brown"
 
             };
-            Human Hava = new()
+            Human Hava = new("hava", new DateTime(1, 1, 1))
             {
                 Gender = "female",
-                Name = "hava",
                 SkinColor = "white",
                 HireColor = "yellow",
-                EyeColor = "blue",
-                BirthDate = new DateTime(1, 1, 1)
+                EyeColor = "blue"
             };
 
             HumanManager.AddHuman(Adam);
@@ -43,6 +48,7 @@ namespace Test
                 
                 humanSimulation = humanSimulation.GoToDate(new DateTime(yy, mm, dd));
 
+                
                 Console.ReadKey();
             }
         }
